@@ -62,9 +62,12 @@ for tech_subteam in final_subteam:
                 print(group_df2)
                 group_df2 = group_df2[['Achievements']]
                 print(group_df2)
-                #Trial Code
+                # To add the tech group
+                count=1
+                tech_subteams = tech_subteam + '/' + tech_group
                 #ends here
-                slide = add_slide(prs, tech_subteam)
+                slide = add_slide(prs, tech_subteams, count)
+
                 # add_text(prs, slide, 0.1, 1.1, 3.0, 0.20, tech_group, 8, 'black')
                 df_to_table(prs, group_df2, slide, 0.1, 1.1, 9.8, 0.001, column_width_list=[Inches(10.75)],
                             font_size=11)
@@ -79,10 +82,10 @@ for tech_subteam in final_subteam:
                 height = 0.1
                 left = 0.1
                 width = 3.0
-
+                count=0
                 for i, prj_member in enumerate(prj_members):
                     if i % 3 == 0 and i != 0:
-                        slide = add_slide(prs, tech_subteam)
+                        slide = add_slide(prs, tech_subteam,count)
                         top = 1.2
                     member_df = prj_members_df[prj_members_df['Employee Name'] == prj_member]
                     member_df.reindex()

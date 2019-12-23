@@ -18,13 +18,13 @@ color_map = {
 }
 
 
-def add_slide(prs, slide_header):
+def add_slide(prs, slide_header,count):
     '''
     Add a new slide in the presentation with the new header.
     '''
 
     # Deleting the pre-defined text and image box
-    SLD_LAYOUT_TITLE_AND_CONTENT = 0
+    SLD_LAYOUT_TITLE_AND_CONTENT = -1
     slide_layout = prs.slide_layouts[SLD_LAYOUT_TITLE_AND_CONTENT]
     slide = prs.slides.add_slide(slide_layout)
     shapes = slide.shapes
@@ -34,6 +34,11 @@ def add_slide(prs, slide_header):
     sp.getparent().remove(sp)
     sp = shapes[0].element
     sp.getparent().remove(sp)
+    if(count == 1):
+        li = slide_header.split('/')
+        for i in li:
+            slide_header = li[0]
+            slide_subhead = li[1]
 
     left = Inches(0)
     top = Inches(0)
@@ -52,6 +57,11 @@ def add_slide(prs, slide_header):
     fill = shape.fill
     fill.solid()
     fill.fore_color.rgb = RGBColor(79, 129, 189)
+    if(count==1):
+        p= shape.text_frame.add_paragraph()
+        p.text = slide_subhead
+        p.alignment = PP_ALIGN.LEFT
+
     return slide
 
 
@@ -72,9 +82,8 @@ def add_textbox(prs, slide, left, top, width, height, size, text, bold=False, it
 
 
 def df_to_table(prs, df,slide, left, top, width, height, color_matrix=None, column_width_list=None, font_size=10):
-    '''
-    insert the dataframe as table in ppt.
-    '''
+
+    # insert the dataframe as table in ppt.
     left = Inches(left)
     top = Inches(top)
     width = Inches(width)
@@ -85,7 +94,7 @@ def df_to_table(prs, df,slide, left, top, width, height, color_matrix=None, colu
     table = shapes.add_table(num_rows, num_columns, left, top, width, height).table
     
     if column_width_list:
-        for i,col_width in enumerate(column_width_list):
+        for i, col_width in enumerate(column_width_list):
             table.columns[i].width = col_width
             
     # inserting the header
@@ -168,3 +177,28 @@ def df_to_table(prs, df,slide, left, top, width, height, color_matrix=None, colu
 #     line = shape.line
 #     line.color.rgb = RGBColor(0x00, 0x00, 0x00)
 #     line.width = Inches(0.01)
+
+def add_slide_corner_head(prs, slide_header):
+
+    SLD_LAYOUT_TITLE_AND_CONTENT = -1
+    slide_layout = prs.slide_layouts[SLD_LAYOUT_TITLE_AND_CONTENT]
+    slide = prs.slides.add_slide(slide_layout)
+    shapes = slide.shapes
+    left = Inches(0)
+    top = Inches(0)
+    width = Inches(11)
+    height = Inches(1)
+    shapes = slide.shapes
+    shape = shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, height)
+    text_frame = shape.text_frame
+    p = text_frame.paragraphs[0]
+    run = p.add_run()
+    run.text = slide_header
+    p.alignment = PP_ALIGN.LEFT
+    font = run.font
+    font.name = 'Calibri'
+    font.size = Pt(11)
+    fill = shape.fill
+    fill.solid()
+    fill.fore_color.rgb = RGBColor(79, 129, 189)
+    return slide
